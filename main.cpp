@@ -1,8 +1,9 @@
+#include <glm/ext/matrix_float2x2.hpp>
+#include <glm/ext/vector_float2.hpp>
+#include <iostream>
 #include <raylib.h>
 #include <raymath.h>
 #include <cmath>
-#include <iostream>
-
  
 Texture2D background;
 class Entity
@@ -13,6 +14,14 @@ class Entity
     void Draw(const Camera2D& camera)
     {
         Vector2 mouse_position = Vector2Normalize(GetScreenToWorld2D(GetMousePosition(), camera));
+        Vector2 local_position = Vector2Normalize(GetScreenToWorld2D(Position, camera));
+        
+        glm::mat2x2 object_center_matrix = {
+                                {local_position.x, 0.0},
+                                {0.0, local_position.y}
+        };
+
+        std::cout <<  (object_center_matrix * glm::vec2(0.0, 0.0) == glm::vec2(local_position.x, local_position.y));
 
         // convert the origin
         float angle =  -Vector2Angle(mouse_position, Rotation) * RAD2DEG;
